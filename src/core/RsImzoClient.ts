@@ -170,7 +170,7 @@ export class Client extends AsyncEventEmitter<RsImzoClientEventMap> {
 
   private buildUrl(path: string, locale?: RsImzoLocale): string {
     const l = locale || this.locale
-    return `${this.targetOrigin}${l}${path}`
+    return `${this.targetOrigin}${l === 'uz' ? '' : `/${l}`}${path}`
   }
 
   public cleanup(): void {
