@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RsImzoClient example</title>
+
+  <style>
+    .container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    .list {
+      width: 100%;
+      margin-block: 0;
+      padding-inline: 0;
+      margin-bottom: 30px;
+      max-width: 400px;
+      list-style: none;
+      overflow: auto;
+      height: 200px;
+    }
+
+    .list-item {
+      display: flex;
+      align-items: center;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      padding: 4px 8px;
+      margin-bottom: 10px;
+    }
+
+    .list-item-content {
+      margin-right: 10px;
+      width: 100%;
+    }
+
+    .list-item-name {
+      font-size: 16px;
+      font-weight: 800;
+    }
+
+    #sign-content,
+    #result,
+    #parsed-result {
+      width: 100%;
+      max-width: 80vw;
+      word-break: break-all;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <ol>
+      <span style="font-weight: 700;">How to use</span>
+      <li>Fill signing content</li>
+      <li>Choose one of the signature from the list and click "Sign" button</li>
+    </ol>
+    <h3>Sign content</h3>
+    <textarea id="sign-content" cols="30" rows="10"></textarea>
+
+    <h3>Signatures</h3>
+    <ul id="list" class="list">
+    </ul>
+
+    <h3>Result</h3>
+    <div id="result"></div>
+
+
+    <h3>Parsed result</h3>
+    <div id="parsed-result"></div>
+
+  </div>
+
+  <!-- <script src="https://cdn.jsdelivr.net/npm/rs-imzo-client@0.0.12/dist/index.global.js"></script> -->
+  <script src="../../dist/index.global.js"></script>
+
+  <script>
+    const client = new window.RsImzo.Client()
+    const signContentEl = document.querySelector('#sign-content')
+    const resultEl = document.querySelector('#result')
+    const parsedResultEl = document.querySelector('#parsed-result')
+
+    client.on('ready', async () => {
+      const { data: signatures, error } = await client.getSignatures()
+      const list = document.querySelector('#list')
+
+      if (error) {
+        console.log(error);
+        return
+      }
+
+      if (signatures.length === 0) {
+        list.innerText = 'List is empty'
+        return
+      }
+
+      signatures.forEach(signature => {
+        const listItem = buildListItem(signature)
+        list.append(listItem)
+      });
+
+    }, { once: true })
+
+    function buildListItem(itemData) {
+      const listItem = createEl('li', 'list-item')
+      const listItemContent = createEl('div', 'list-item-content')
+
+      const listItemName = createEl('div', 'list-item-name')
+      listItemName.innerText = itemData.fullName
+
+      const listItemSerial = createEl('div', 'list-item-serial')
+      listItemSerial.innerText = itemData.serial
+
+      const btn = buildActionBtn(itemData)
+
+      listItemContent.append(listItemName)
+      listItemContent.append(listItemSerial)
+
+      listItem.append(listItemContent)
+      listItem.append(btn)
+
+      return listItem
+    }
+
+    function createEl(type, className) {
+      const el = document.createElement(type)
+      el.classList.add(className)
+
+      return el
+    }
+
+    function buildActionBtn(itemData) {
+      const btn = document.createElement('button')
+      btn.innerText = 'Sign'
+
+      btn.addEventListener('click', async () => {
+        const val = btoa(signContentEl.value)
+        const { data: pkcs7, error: signError } = await client.sign(itemData.serial, val)
+
+        if (signError) {
+          return console.log(error)
+        }
+
+        const { data: parsedPkcs7, error: parsePkcs7Error } = await client.parsePkcs7(pkcs7)
+
+        if(parsePkcs7Error) {
+          return console.log(parsePkcs7Error)
+        }
+        
+        resultEl.innerText = pkcs7
+        parsedResultEl.innerText = JSON.stringify(parsedPkcs7)
+      })
+
+      return btn
+    }
+
+
+    addEventListener('beforeunload', () => {
+      client.cleanup()
+    })
+
+  </script>
+</body>
+
+</html>

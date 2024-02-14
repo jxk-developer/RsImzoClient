@@ -1,0 +1,25 @@
+{
+  "name": "rs-imzo-client",
+  "description": "Library for easy integration with Rs-imzo.",
+  "author": "Realsoft",
+  "version": "0.0.0",
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "browser": "./dist/idnex.global.js",
+  "types": "./dist/index.d.ts",
+  "type": "module",
+  "scripts": {
+    "build2": "tsc && vite build",
+    "build": "tsup",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.17",
+    "jsdom": "^24.0.0",
+    "tsup": "^8.0.2",
+    "typescript": "^5.2.2",
+    "vite": "^5.1.0",
+    "vitest": "^1.2.2"
+  }
+}
