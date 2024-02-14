@@ -79,7 +79,7 @@
   </div>
 
   <!-- <script src="https://cdn.jsdelivr.net/npm/rs-imzo-client@0.0.12/dist/index.global.js"></script> -->
-  <script src="../../dist/index.global.js"></script>
+  <script src="/rs-imzo-client.iife.js"></script>
 
   <script>
     const client = new window.RsImzo.Client()
@@ -145,15 +145,15 @@
         const { data: pkcs7, error: signError } = await client.sign(itemData.serial, val)
 
         if (signError) {
-          return console.log(error)
+          return console.log(signError)
         }
 
         const { data: parsedPkcs7, error: parsePkcs7Error } = await client.parsePkcs7(pkcs7)
 
-        if(parsePkcs7Error) {
+        if (parsePkcs7Error) {
           return console.log(parsePkcs7Error)
         }
-        
+
         resultEl.innerText = pkcs7
         parsedResultEl.innerText = JSON.stringify(parsedPkcs7)
       })
