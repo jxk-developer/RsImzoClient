@@ -7,9 +7,9 @@ jobs:
   build_and_release:
     permissions:
       contents: read
-      pages: write
-      id-token: write
-      
+      issues: write
+      pull-requests: write
+
     runs-on: ubuntu-latest
 
     steps:
