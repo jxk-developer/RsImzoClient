@@ -12,10 +12,11 @@ describe('RsImzoClient', () => {
     expect(document.body.contains(client['providerIframe'])).toBe(true);
   });
 
-  it('emits "ready" event when the iframe loads', async () => {
+  it('emits a "ready" event if the iframe window is loaded', async () => {
     const client = new Client();
     const readyHandler = vi.fn();
     client.on('ready', readyHandler);
+    client['checkWindowLoadedViaHandshake'] = vi.fn().mockResolvedValue(true);
     await client['appendProviderIframe']();
     expect(readyHandler).toHaveBeenCalled();
   });
