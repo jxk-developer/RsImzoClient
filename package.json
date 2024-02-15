@@ -21,6 +21,7 @@
   "devDependencies": {
     "@types/node": "^20.11.17",
     "jsdom": "^24.0.0",
+    "semantic-release": "^23.0.2",
     "typescript": "^5.2.2",
     "vite": "^5.1.0",
     "vite-plugin-dts": "^3.7.2",
