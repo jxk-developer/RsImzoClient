@@ -4,7 +4,7 @@ on:
   workflow_dispatch: 
 
 jobs:
-  build:
+  build_and_release:
     runs-on: ubuntu-latest
 
     steps:
@@ -14,7 +14,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: latest
-        cache: 'npm'
 
     - name: Install dependencies
       run: npm install
@@ -22,10 +21,6 @@ jobs:
     - name: Build
       run: npm run build
 
-  release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
     - name: Release
       run: npx semantic-release
       env:
