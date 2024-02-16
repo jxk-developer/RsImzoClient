@@ -4,7 +4,6 @@ type RSIEventListener<T> = T extends void ? () => Promise<void> | void : (arg: T
 export class AsyncEventEmitter<EventMap extends Record<string, any>> {
   private _events: { [K in keyof EventMap]?: Array<{ listener: RSIEventListener<EventMap[K]>, once: boolean }> } = {};
 
-
   public get events() {
     return this._events
   }
