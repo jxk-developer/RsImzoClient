@@ -1,8 +1,6 @@
 
 type RSIEventListener<T> = T extends void ? () => Promise<void> | void : (arg: T) => Promise<void> | void;
 
-console.log('Hello from EventEmitter.ts, this is a test file to check');
-
 export class AsyncEventEmitter<EventMap extends Record<string, any>> {
   private _events: { [K in keyof EventMap]?: Array<{ listener: RSIEventListener<EventMap[K]>, once: boolean }> } = {};
 
